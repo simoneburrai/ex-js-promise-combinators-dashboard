@@ -39,11 +39,8 @@ async function getDashboardData(query){
     const weatherResponse = fetch(`${apiUrl}${weatherQuerySearch}${query}`).then(res=> res.json());
     const airportResponse = fetch(`${apiUrl}${airportQuerySearch}${query}`).then(res=> res.json());
     try {
-        allPromises = Promise.allSettled([destinationResponse, weatherResponse, airportResponse])
-    }catch{
-        throw new Error("Problema nel catturamento dati dashboard")
-    }
-    
+        allPromises = Promise.allSettled([destinationResponse, weatherResponse, airportResponse]);
+
     const allResponses =  (await allPromises).map(promise => {
             if(promise.status === "fulfilled"){
                 return promise.value
@@ -63,8 +60,12 @@ async function getDashboardData(query){
         country: destinations[0].country ? destinations[0].country : null,
         weather: weathers[0].weather_description ? weathers[0].weather_description : null,
         temperature: weathers[0].temperature ? weathers[0].temperature : null,
-        airport: airports[0].name ? airports[0].name : null
+        airport: airports[0]?.name ? airports[0].name : null
     }
+    }catch{
+        throw new Error("Problema nel catturamento dati dashboard")
+    }
+    
 }
 
 
